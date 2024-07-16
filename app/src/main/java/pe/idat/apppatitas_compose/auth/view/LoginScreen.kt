@@ -2,6 +2,7 @@ package pe.idat.apppatitas_compose.auth.view
 
 import android.app.Activity
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -35,12 +36,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import pe.idat.apppatitas_compose.R
 
 @Composable
 fun loginScreen() {
@@ -89,12 +92,19 @@ fun irRegistro(){
 @Composable
 fun formularioLogin(modifier: Modifier){
     Column(modifier = modifier.padding(start = 5.dp, end = 5.dp)) {
+        logoPatitas(Modifier.align(Alignment.CenterHorizontally))
+        Spacer(modifier = Modifier.size(4.dp))
         txtusuario("") { it }
         Spacer(modifier = Modifier.size(4.dp))
         txtpassword("") { it }
         Spacer(modifier = Modifier.size(8.dp))
         authButton()
     }
+}
+@Composable
+fun logoPatitas(modifier: Modifier){
+    Image(painter = painterResource(id = R.drawable.imgsplash), contentDescription = "logo",
+        modifier = modifier)
 }
 
 @Composable
