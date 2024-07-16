@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import pe.idat.apppatitas_compose.auth.view.loginScreen
+import pe.idat.apppatitas_compose.auth.view.registroScreen
 import pe.idat.apppatitas_compose.ui.theme.ApppatitascomposeTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,7 +21,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ApppatitascomposeTheme {
-                loginScreen()
+                registroScreen()
             }
         }
     }
