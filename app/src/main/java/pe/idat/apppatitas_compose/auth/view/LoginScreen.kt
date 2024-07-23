@@ -131,15 +131,25 @@ fun logoPatitas(modifier: Modifier){
 fun authButton(botonHabilitado: Boolean, loginViewModel: LoginViewModel,
                state: SnackbarHostState, navController: NavController){
     val scope = rememberCoroutineScope()
+    val loginResponse by loginViewModel.loginResponse.observeAsState()
     Button(onClick = {
-        scope.launch {
-            state.showSnackbar("Queriendo ingresar!!", actionLabel = "OK",
-                duration = SnackbarDuration.Long)
-        }
+        loginViewModel.loginUsuarioPassword()
     }, modifier = Modifier.fillMaxWidth(),
         enabled = botonHabilitado
     ) {
         Text(text = "Ingresar")
+    }
+    loginResponse?.let {
+        response ->
+        if(response.rpta){
+            navController.navigate(RutaPatitas.homeScreen.path)
+        }else{
+            scope.launch {
+                state.showSnackbar("Login Fallido: ${response.mensaje}",
+                    actionLabel = "OK",
+                    duration = SnackbarDuration.Long)
+            }
+        }
     }
 }
 @Composable

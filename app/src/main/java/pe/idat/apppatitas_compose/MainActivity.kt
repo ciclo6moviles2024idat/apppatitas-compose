@@ -15,6 +15,7 @@ import pe.idat.apppatitas_compose.auth.view.loginScreen
 import pe.idat.apppatitas_compose.auth.view.registroScreen
 import pe.idat.apppatitas_compose.auth.viewmodel.LoginViewModel
 import pe.idat.apppatitas_compose.core.ruta.RutaPatitas
+import pe.idat.apppatitas_compose.home.view.homeScreen
 import pe.idat.apppatitas_compose.ui.theme.ApppatitascomposeTheme
 
 @AndroidEntryPoint
@@ -34,6 +35,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(RutaPatitas.registroScreen.path){
                             registroScreen()
+                        }
+                        composable(RutaPatitas.homeScreen.path){
+                            homeScreen()
                         }
                     })
             }
