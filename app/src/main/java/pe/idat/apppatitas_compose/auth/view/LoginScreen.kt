@@ -26,13 +26,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -47,6 +50,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import kotlinx.coroutines.launch
 import pe.idat.apppatitas_compose.R
 import pe.idat.apppatitas_compose.auth.viewmodel.LoginViewModel
 import pe.idat.apppatitas_compose.core.ruta.RutaPatitas
@@ -62,7 +66,8 @@ fun loginScreen(loginViewModel: LoginViewModel, navController: NavController) {
             .fillMaxSize()
             .padding(paddingValues)){
             cabecera(modifier = Modifier.align(Alignment.TopEnd))
-            formularioLogin(modifier = Modifier.align(Alignment.Center))
+            formularioLogin(modifier = Modifier.align(Alignment.Center),
+                loginViewModel, snackbarHostState, navController)
             pie(modifier = Modifier.align(Alignment.BottomCenter), navController)
         }
     }
@@ -100,15 +105,20 @@ fun irRegistro(navController: NavController){
 }
 
 @Composable
-fun formularioLogin(modifier: Modifier){
+fun formularioLogin(modifier: Modifier, loginViewModel: LoginViewModel,
+                    state: SnackbarHostState, navController: NavController){
+    val usuario: String by loginViewModel.usuario.observeAsState(initial = "")
+    val password: String by loginViewModel.password.observeAsState(initial = "")
+    val botonLoginHabilitado: Boolean by
+            loginViewModel.botonLoginHabilitado.observeAsState(initial = false)
     Column(modifier = modifier.padding(start = 5.dp, end = 5.dp)) {
         logoPatitas(Modifier.align(Alignment.CenterHorizontally))
         Spacer(modifier = Modifier.size(4.dp))
-        txtusuario("") { it }
+        txtusuario(usuario) { loginViewModel.onValueChanged(it, password) }
         Spacer(modifier = Modifier.size(4.dp))
-        txtpassword("") { it }
+        txtpassword(password) { loginViewModel.onValueChanged(usuario, it) }
         Spacer(modifier = Modifier.size(8.dp))
-        authButton()
+        authButton(botonLoginHabilitado, loginViewModel, state, navController)
     }
 }
 @Composable
@@ -118,9 +128,17 @@ fun logoPatitas(modifier: Modifier){
 }
 
 @Composable
-fun authButton(){
+fun authButton(botonHabilitado: Boolean, loginViewModel: LoginViewModel,
+               state: SnackbarHostState, navController: NavController){
+    val scope = rememberCoroutineScope()
     Button(onClick = {
-    }, modifier = Modifier.fillMaxWidth()) {
+        scope.launch {
+            state.showSnackbar("Queriendo ingresar!!", actionLabel = "OK",
+                duration = SnackbarDuration.Long)
+        }
+    }, modifier = Modifier.fillMaxWidth(),
+        enabled = botonHabilitado
+    ) {
         Text(text = "Ingresar")
     }
 }
