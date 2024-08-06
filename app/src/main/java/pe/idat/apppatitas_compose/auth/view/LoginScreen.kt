@@ -139,7 +139,7 @@ fun authButton(botonHabilitado: Boolean, loginViewModel: LoginViewModel,
     ) {
         Text(text = "Ingresar")
     }
-    loginResponse?.let {
+    loginResponse?.obtenerContenidoSiCambio()?.let {
         response ->
         if(response.rpta){
             navController.navigate(RutaPatitas.homeScreen.path)
