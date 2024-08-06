@@ -13,8 +13,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Pets
+import androidx.compose.material.icons.filled.PhoneAndroid
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
@@ -168,7 +171,7 @@ fun txtemail(email: String, onTextChanged: (String) -> Unit){
         onValueChange = {onTextChanged(it)},
         modifier = Modifier.fillMaxWidth(),
         label = { Text(text = "Email")},
-        leadingIcon = { Icon(imageVector = Icons.Default.Person, contentDescription = "persona")},
+        leadingIcon = { Icon(imageVector = Icons.Default.Email, contentDescription = "persona")},
         maxLines = 1,
         singleLine = true
     )
@@ -180,7 +183,7 @@ fun txtcelular(celular: String, onTextChanged: (String) -> Unit){
         onValueChange = {onTextChanged(it)},
         modifier = Modifier.fillMaxWidth(),
         label = { Text(text = "Celular")},
-        leadingIcon = { Icon(imageVector = Icons.Default.Person, contentDescription = "persona")},
+        leadingIcon = { Icon(imageVector = Icons.Default.PhoneAndroid, contentDescription = "persona")},
         maxLines = 1,
         singleLine = true
     )
@@ -206,7 +209,7 @@ fun txtpasswordreg(password: String, onTextChanged: (String) -> Unit){
         onValueChange = {onTextChanged(it)},
         modifier = Modifier.fillMaxWidth(),
         label = { Text(text = "Password")},
-        leadingIcon = { Icon(imageVector = Icons.Default.Person, contentDescription = "persona")},
+        leadingIcon = { Icon(imageVector = Icons.Default.Key, contentDescription = "persona")},
         maxLines = 1,
         singleLine = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),

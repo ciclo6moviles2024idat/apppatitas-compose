@@ -1,5 +1,6 @@
 package pe.idat.apppatitas_compose.auth.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -59,10 +60,13 @@ class RegistroViewModel @Inject constructor(
     fun registrarPersona(){
         viewModelScope.launch {
             val response = registroUseCase(
-                RegistroRequest(nombres.value!!,
+                RegistroRequest(
+                    nombres.value!!,
                     apellidos.value!!, email.value!!, celular.value!!,
-                    usuario.value!!, password.value!!)
+                    usuario.value!!, password.value!!
+                )
             )
+            //Log.i("RESPONSE", response.toString())
             _registroResponse.value = Evento(response)
         }
     }
