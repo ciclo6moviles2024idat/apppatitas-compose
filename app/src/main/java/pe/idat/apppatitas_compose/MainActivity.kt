@@ -14,6 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import pe.idat.apppatitas_compose.auth.view.loginScreen
 import pe.idat.apppatitas_compose.auth.view.registroScreen
 import pe.idat.apppatitas_compose.auth.viewmodel.LoginViewModel
+import pe.idat.apppatitas_compose.auth.viewmodel.RegistroViewModel
 import pe.idat.apppatitas_compose.core.ruta.RutaPatitas
 import pe.idat.apppatitas_compose.home.view.homeScreen
 import pe.idat.apppatitas_compose.ui.theme.ApppatitascomposeTheme
@@ -21,6 +22,7 @@ import pe.idat.apppatitas_compose.ui.theme.ApppatitascomposeTheme
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val loginViewModel: LoginViewModel by viewModels()
+    private val registroViewModel: RegistroViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -34,7 +36,7 @@ class MainActivity : ComponentActivity() {
                             loginScreen(loginViewModel, navigation)
                         }
                         composable(RutaPatitas.registroScreen.path){
-                            registroScreen()
+                            registroScreen(registroViewModel, navigation)
                         }
                         composable(RutaPatitas.homeScreen.path){
                             homeScreen()

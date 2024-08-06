@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import pe.idat.apppatitas_compose.auth.data.network.request.RegistroRequest
 import pe.idat.apppatitas_compose.auth.data.network.response.RegistroResponse
@@ -11,7 +12,7 @@ import pe.idat.apppatitas_compose.auth.domain.RegistroUseCase
 import pe.idat.apppatitas_compose.core.util.Evento
 import javax.inject.Inject
 
-
+@HiltViewModel
 class RegistroViewModel @Inject constructor(
     private val registroUseCase: RegistroUseCase) : ViewModel() {
 

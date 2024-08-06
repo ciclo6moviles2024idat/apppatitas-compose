@@ -22,10 +22,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -36,15 +42,23 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import kotlinx.coroutines.launch
+import pe.idat.apppatitas_compose.auth.viewmodel.RegistroViewModel
+import pe.idat.apppatitas_compose.core.ruta.RutaPatitas
 
 @Composable
-fun registroScreen() {
-    Scaffold { paddingValues ->
+fun registroScreen(registroViewModel: RegistroViewModel, navController: NavController) {
+    val snackbarHostState = remember {
+        SnackbarHostState()
+    }
+    Scaffold(snackbarHost = { SnackbarHost(hostState = snackbarHostState)})
+    { paddingValues ->
         Column(modifier = Modifier
             .fillMaxSize()
             .padding(paddingValues)) {
             cabeceraRegistro()
-            formularioRegistro()
+            formularioRegistro(registroViewModel, snackbarHostState, navController)
         }
     }
 }
@@ -61,30 +75,68 @@ fun cabeceraRegistro(){
 }
 
 @Composable
-fun formularioRegistro(){
+fun formularioRegistro(registroViewModel: RegistroViewModel,
+                       hostState: SnackbarHostState,
+                       navController: NavController){
+    val nombre : String by registroViewModel.nombres.observeAsState(initial = "")
+    val apellido : String by registroViewModel.apellidos.observeAsState(initial = "")
+    val email : String by registroViewModel.email.observeAsState(initial = "")
+    val celular : String by registroViewModel.celular.observeAsState(initial = "")
+    val usuario : String by registroViewModel.usuario.observeAsState(initial = "")
+    val password : String by registroViewModel.password.observeAsState(initial = "")
     Column(modifier = Modifier
         .padding(start = 5.dp, end = 5.dp)
         .verticalScroll(rememberScrollState())) {
-        txtnombre(nombre = "") { it }
+        txtnombre(nombre) { registroViewModel.onRegistroChanged(it, apellido,
+            email, celular, usuario, password) }
         Spacer(modifier = Modifier.size(5.dp))
-        txtapellido("") { it }
+        txtapellido(apellido) { registroViewModel.onRegistroChanged(nombre, it,
+            email, celular, usuario, password) }
         Spacer(modifier = Modifier.size(5.dp))
-        txtemail("") { it }
+        txtemail(email) { registroViewModel.onRegistroChanged(nombre, apellido,
+            it, celular, usuario, password) }
         Spacer(modifier = Modifier.size(5.dp))
-        txtcelular("") { it }
+        txtcelular(celular) { registroViewModel.onRegistroChanged(nombre, apellido,
+            email, it, usuario, password) }
         Spacer(modifier = Modifier.size(5.dp))
-        txtusuarioreg("") { it }
+        txtusuarioreg(usuario) { registroViewModel.onRegistroChanged(nombre, apellido,
+            email, celular, it, password) }
         Spacer(modifier = Modifier.size(5.dp))
-        txtpasswordreg( "") { it }
+        txtpasswordreg( password) { registroViewModel.onRegistroChanged(nombre, apellido,
+            email, celular, usuario, it) }
         Spacer(modifier = Modifier.size(5.dp))
-        buttonregistro()
+        buttonregistro(registroViewModel, hostState)
+        Spacer(modifier = Modifier.size(5.dp))
+        buttonirlogin(navController)
     }
 }
 @Composable
-fun buttonregistro(){
+fun buttonregistro(registroViewModel: RegistroViewModel,
+                   hostState: SnackbarHostState){
+    val registroResponse by registroViewModel.registroResponse.observeAsState()
+    val scope = rememberCoroutineScope()
     Button(onClick = {
+        registroViewModel.registrarPersona()
     }, modifier = Modifier.fillMaxWidth()) {
-        Text(text = "Registrar")
+        Text(text = "Registrar Persona")
+    }
+    registroResponse?.obtenerContenidoSiCambio()?.let {
+        response ->
+        scope.launch {
+            hostState.showSnackbar(response.mensaje,
+                actionLabel = "OK",
+                duration = SnackbarDuration.Short)
+        }
+        registroViewModel.setearFormularioRegistro()
+    }
+
+}
+@Composable
+fun buttonirlogin(navController: NavController){
+    Button(onClick = {
+        navController.navigate(RutaPatitas.loginScreen.path)
+    }, modifier = Modifier.fillMaxWidth()) {
+        Text(text = "Regresar a Login")
     }
 }
 
