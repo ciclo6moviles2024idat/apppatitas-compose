@@ -3,6 +3,9 @@ package pe.idat.apppatitas_compose.auth.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
+import pe.idat.apppatitas_compose.auth.data.network.request.RegistroRequest
 import pe.idat.apppatitas_compose.auth.data.network.response.RegistroResponse
 import pe.idat.apppatitas_compose.auth.domain.RegistroUseCase
 import pe.idat.apppatitas_compose.core.util.Evento
@@ -28,6 +31,38 @@ class RegistroViewModel @Inject constructor(
     private val _registroResponse = MutableLiveData<Evento<RegistroResponse>>()
     val registroResponse: LiveData<Evento<RegistroResponse>> = _registroResponse
 
+    fun onRegistroChanged(
+        nombres: String,
+        apellidos: String,
+        email:String,
+        celular:String,
+        usuario: String,
+        passwod: String
+    ){
+        _nombres.value = nombres
+        _apellidos.value = apellidos
+        _email.value = email
+        _celular.value = celular
+        _usuario.value = usuario
+        _password.value = passwod
+    }
 
-
+    fun setearFormularioRegistro(){
+        _nombres.value = ""
+        _apellidos.value = ""
+        _email.value = ""
+        _celular.value = ""
+        _usuario.value = ""
+        _password.value = ""
+    }
+    fun registrarPersona(){
+        viewModelScope.launch {
+            val response = registroUseCase(
+                RegistroRequest(nombres.value!!,
+                    apellidos.value!!, email.value!!, celular.value!!,
+                    usuario.value!!, password.value!!)
+            )
+            _registroResponse.value = Evento(response)
+        }
+    }
 }
