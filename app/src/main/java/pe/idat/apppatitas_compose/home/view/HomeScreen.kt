@@ -38,9 +38,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 import pe.idat.apppatitas_compose.R
+import pe.idat.apppatitas_compose.core.ruta.RutaPatitas
 import pe.idat.apppatitas_compose.core.util.MenuItem
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,6 +58,10 @@ fun homeScreen(){
                 item ->
                 coroutineScope.launch {
                     drawerState.close()
+                }
+                when(item.titulo){
+                    "Mascotas" -> navController.navigate(RutaPatitas.mascotaScreen.path)
+                    "Voluntario" -> navController.navigate(RutaPatitas.voluntarioScreen.path)
                 }
             })
         },
@@ -74,6 +81,11 @@ fun homeScreen(){
                             Icon(Icons.Default.Menu, contentDescription = "Menu")
                         }
                     })
+                NavHost(navController = navController,
+                    startDestination = RutaPatitas.mascotaScreen.path) {
+                    composable(RutaPatitas.mascotaScreen.path){ mascotaScreen()}
+                    composable(RutaPatitas.voluntarioScreen.path){ voluntarioScreen() }
+                }
             }
         })
 }
