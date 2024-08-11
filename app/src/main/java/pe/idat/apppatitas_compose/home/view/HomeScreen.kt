@@ -45,10 +45,12 @@ import kotlinx.coroutines.launch
 import pe.idat.apppatitas_compose.R
 import pe.idat.apppatitas_compose.core.ruta.RutaPatitas
 import pe.idat.apppatitas_compose.core.util.MenuItem
+import pe.idat.apppatitas_compose.home.viewmodel.MascotaViewModel
+import pe.idat.apppatitas_compose.home.viewmodel.VoluntarioViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun homeScreen(){
+fun homeScreen(mascotaViewModel: MascotaViewModel, voluntarioViewModel: VoluntarioViewModel){
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
     val navController = rememberNavController()
@@ -83,7 +85,7 @@ fun homeScreen(){
                     })
                 NavHost(navController = navController,
                     startDestination = RutaPatitas.mascotaScreen.path) {
-                    composable(RutaPatitas.mascotaScreen.path){ mascotaScreen()}
+                    composable(RutaPatitas.mascotaScreen.path){ mascotaScreen(mascotaViewModel)}
                     composable(RutaPatitas.voluntarioScreen.path){ voluntarioScreen() }
                 }
             }

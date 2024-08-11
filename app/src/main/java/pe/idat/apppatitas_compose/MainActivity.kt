@@ -17,12 +17,16 @@ import pe.idat.apppatitas_compose.auth.viewmodel.LoginViewModel
 import pe.idat.apppatitas_compose.auth.viewmodel.RegistroViewModel
 import pe.idat.apppatitas_compose.core.ruta.RutaPatitas
 import pe.idat.apppatitas_compose.home.view.homeScreen
+import pe.idat.apppatitas_compose.home.viewmodel.MascotaViewModel
+import pe.idat.apppatitas_compose.home.viewmodel.VoluntarioViewModel
 import pe.idat.apppatitas_compose.ui.theme.ApppatitascomposeTheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val loginViewModel: LoginViewModel by viewModels()
     private val registroViewModel: RegistroViewModel by viewModels()
+    private val mascotaViewModel: MascotaViewModel by viewModels()
+    private val voluntarioViewModel: VoluntarioViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -39,7 +43,7 @@ class MainActivity : ComponentActivity() {
                             registroScreen(registroViewModel, navigation)
                         }
                         composable(RutaPatitas.homeScreen.path){
-                            homeScreen()
+                            homeScreen(mascotaViewModel, voluntarioViewModel)
                         }
                     })
             }
