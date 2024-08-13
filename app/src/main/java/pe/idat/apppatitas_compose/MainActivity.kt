@@ -43,7 +43,8 @@ class MainActivity : ComponentActivity() {
                             registroScreen(registroViewModel, navigation)
                         }
                         composable(RutaPatitas.homeScreen.path){
-                            homeScreen(mascotaViewModel, voluntarioViewModel)
+                            homeScreen(mascotaViewModel, voluntarioViewModel,
+                                navigation)
                         }
                     })
             }

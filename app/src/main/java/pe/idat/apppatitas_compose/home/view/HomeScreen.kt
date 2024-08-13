@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Pets
@@ -40,6 +41,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -52,7 +54,9 @@ import pe.idat.apppatitas_compose.home.viewmodel.VoluntarioViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun homeScreen(mascotaViewModel: MascotaViewModel, voluntarioViewModel: VoluntarioViewModel){
+fun homeScreen(mascotaViewModel: MascotaViewModel,
+               voluntarioViewModel: VoluntarioViewModel,
+               principalNavController: NavController){
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
     val navController = rememberNavController()
@@ -83,6 +87,19 @@ fun homeScreen(mascotaViewModel: MascotaViewModel, voluntarioViewModel: Voluntar
                             }
                         }) {
                             Icon(Icons.Default.Menu, contentDescription = "Menu")
+                        }
+                    },
+                    actions = {
+                        IconButton(onClick = {
+                            mascotaViewModel.eliminarPersona()
+                            principalNavController.navigate("loginScreen"){
+                                popUpTo(navController.graph.startDestinationId) {inclusive = true }
+                            }
+                        }) {
+                            Icon(imageVector = Icons.Default.ExitToApp,
+                                contentDescription = null,
+                                tint = Color.Black
+                            )
                         }
                     })
                 NavHost(navController = navController,
