@@ -30,6 +30,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -65,7 +67,7 @@ fun homeScreen(mascotaViewModel: MascotaViewModel, voluntarioViewModel: Voluntar
                     "Mascotas" -> navController.navigate(RutaPatitas.mascotaScreen.path)
                     "Voluntario" -> navController.navigate(RutaPatitas.voluntarioScreen.path)
                 }
-            })
+            }, mascotaViewModel)
         },
         content = {
             Column {
@@ -95,13 +97,14 @@ fun homeScreen(mascotaViewModel: MascotaViewModel, voluntarioViewModel: Voluntar
 
 @Composable
 fun DrawerContent(items: List<MenuItem>,
-                  onItemClick: (MenuItem) -> Unit){
+                  onItemClick: (MenuItem) -> Unit,
+                  mascotaViewModel: MascotaViewModel){
     Column(
         Modifier
             .fillMaxSize()
             .background(Color.White)
             .systemBarsPadding()) {
-        DrawerHeader()
+        DrawerHeader(mascotaViewModel)
         Spacer(modifier = Modifier.height(8.dp))
         items.forEach { item ->
             DrawerMenuItem(item = item, onItemClick = onItemClick)
@@ -110,7 +113,8 @@ fun DrawerContent(items: List<MenuItem>,
 }
 
 @Composable
-fun DrawerHeader(){
+fun DrawerHeader(mascotaViewModel: MascotaViewModel){
+    val persona by mascotaViewModel.persona.observeAsState()
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -124,8 +128,12 @@ fun DrawerHeader(){
                 .clip(CircleShape))
         Spacer(modifier = Modifier.width(16.dp))
         Column {
-            Text(text = "Luis Salvatierra", fontWeight = FontWeight.Bold)
-            Text(text = "lsalvatierra@gmail.com", color = Color.Gray)
+            persona?.let {
+                values ->
+                Text(text = values.nombres, fontWeight = FontWeight.Bold)
+                Text(text = values.email, color = Color.Gray)
+            }
+
         }
     }
 }
