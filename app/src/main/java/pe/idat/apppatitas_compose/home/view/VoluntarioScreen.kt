@@ -18,7 +18,11 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -26,9 +30,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import pe.idat.apppatitas_compose.auth.view.cabeceraRegistro
+import pe.idat.apppatitas_compose.home.viewmodel.VoluntarioViewModel
 
 @Composable
-fun voluntarioScreen(){
+fun voluntarioScreen(voluntarioViewModel: VoluntarioViewModel){
+    val persona by voluntarioViewModel.persona.observeAsState()
     val snackbarHostState = remember {
         SnackbarHostState()
     }
@@ -38,15 +44,24 @@ fun voluntarioScreen(){
             Modifier
                 .fillMaxSize()
                 .padding(paddingValues)) {
-            cabeceraRegistro()
-            Spacer(modifier = Modifier.height(10.dp))
-            formularioVoluntario()
+            persona?.let {
+                value ->
+                if(value.esvoluntario == "1"){
+                    cabaceraVoluntario("Gracias por ser parte de nuestro equipo.")
+                }else{
+                    cabaceraVoluntario("¡UNETE A NOSOTROS!")
+                    Spacer(modifier = Modifier.height(10.dp))
+                    formularioVoluntario(voluntarioViewModel, snackbarHostState)
+                }
+            }
+
+
         }
     }
 }
 
 @Composable
-fun cabaceraVoluntario(){
+fun cabaceraVoluntario(texto: String){
     Column(
         Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -55,42 +70,45 @@ fun cabaceraVoluntario(){
             modifier = Modifier
                 .width(100.dp)
                 .height(100.dp))
-        Text(text = "UNETE A NOSOTROS",
+        Text(text = texto,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold)
     }
 }
 
 @Composable
-fun formularioVoluntario(){
+fun formularioVoluntario(
+    voluntarioViewModel: VoluntarioViewModel,
+    state: SnackbarHostState){
+    var isChecked by remember { mutableStateOf(false) }
     Column(
         Modifier
             .fillMaxWidth()
             .padding(start = 8.dp, end = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally) {
         lblTerminosCondiciones()
-        cbTerminosCondiciones()
-        btnRegistrarVoluntario()
+        cbTerminosCondiciones(isChecked) {isChecked = it}
+        btnRegistrarVoluntario(isChecked, voluntarioViewModel, state)
     }
 }
-
 @Composable
 fun lblTerminosCondiciones(){
-    Text(text = "", fontSize = 12.sp, textAlign = TextAlign.Justify)
+    Text(text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.", fontSize = 12.sp, textAlign = TextAlign.Justify)
 }
-
 @Composable
-fun cbTerminosCondiciones(){
+fun cbTerminosCondiciones(isChecked: Boolean, onCheckedChange: (Boolean)-> Unit){
     Row {
-        Checkbox(checked = false, onCheckedChange = {it})
+        Checkbox(checked = isChecked, onCheckedChange = {onCheckedChange(it)})
         Spacer(modifier = Modifier.width(5.dp))
         Text(text = "Aceptar términos y condiciones",
             Modifier.padding(top = 12.dp), fontSize = 12.sp)
     }
 }
 @Composable
-fun btnRegistrarVoluntario(){
-    Button(onClick = { /*TODO*/ }, Modifier.fillMaxWidth()) {
+fun btnRegistrarVoluntario(isEnabled: Boolean, voluntarioViewModel: VoluntarioViewModel,
+                           state: SnackbarHostState){
+    Button(onClick = { /*TODO*/ }, Modifier.fillMaxWidth(),
+        enabled = isEnabled) {
         Text(text = "Registrar Voluntario")
     }
 }
